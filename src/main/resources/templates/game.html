@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Game')}"></div>
+<div th:replace="~{common :: navbar(game=true)}"></div>
+<body class="bg-light">
+<div class="container">
+    <div th:if="${!game.isCompleted()}">
+        
+        <div>
+            <div th:if="${!game.isReady()}">
+                Wait for an opponent
+            </div>
+            <div id="block_container">
+                <div id="bloc1" th:if="${game.isReady()}">
+                    <h1><small th:text="${game.getUsers().get(0).getName()}"></small></h1>
+                    <h1><small th:text="${game.getUsers().get(0).getRace()}"></small></h1>
+                    <h1><small th:text="${game.getUsers().get(0).getSpecialisation()}"></small></h1>
+                    <h1>HP: <small th:text="${game.getUsers().get(0).getNumber()}"></small></h1>
+                </div>
+                <div id="bloc2" th:if="${game.isReady()}">
+                    <h1><small th:text="${game.getUsers().get(1).getName()}"></small></h1>
+                    <h1><small th:text="${game.getUsers().get(1).getRace()}"></small></h1>
+                    <h1><small th:text="${game.getUsers().get(1).getSpecialisation()}"></small></h1>
+                    <h1>HP: <small th:text="${game.getUsers().get(1).getNumber()}"></small></h1>
+                </div>
+            </div>
+        </div>
+        <div th:if="${game.isReady() && game.getCurrent().getCoolDown() == 0}">
+            <form th:action="@{/games/select/{action}(action = ${game.getCurrent().getFirst()})}" method="get">
+                <button type="submit" class="btn btn-primary"><small th:text="${game.getCurrent().getFirst()}"></small>
+                </button>
+            </form>
+            <p></p>
+            <form th:action="@{/games/select/{action}(action = ${game.getCurrent().getSecond()})}" method="get">
+                <button type="submit" class="btn btn-primary"><small th:text="${game.getCurrent().getSecond()}"></small>
+                </button>
+            </form>
+            <p></p>
+            <form th:action="@{/games/select/{action}(action= ${game.getCurrent().getThird()})}" method="get">
+                <button type="submit" class="btn btn-primary"><small th:text="${game.getCurrent().getThird()}"></small>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div th:if="${game.getCurrent().getCoolDown() != 0 && !game.isCompleted()}">
+        Cool down
+    </div>
+    <div th:if="${game.isCompleted()}">
+        <h1>Winner is <small th:text="${game.getWinner()}"></small>!</h1>
+        <p></p>
+        <form th:action="@{/games/delete}" method="get">
+            <button type="submit" class="btn btn-primary">Profile</button>
+        </form>
+    </div>
+</div>
+<div th:if="${!game.isCompleted()}">
+    <script type="text/javascript">
+        setTimeout(function () {
+            location = 'http://localhost:8080/games'
+        }, 1000)
+    </script>
+</div>
+</body>
+<div th:replace="~{common :: js-lb}"></div>
+</html>

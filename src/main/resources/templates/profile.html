@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Profile')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="bg-light">
+    <div class="container bg-light">
+        <h3>Name: <small th:text="${user.getName()}"></small></h3>
+        <h3>Rating: <small th:text="${user.getRating()}"></small></h3>
+        <h3>HP: <small th:text="${user.getNumber()}"></small></h3>
+        <h3>Max HP: <small th:text="${user.getMaxNumber()}"></small></h3>
+    </div>
+    <div th:if="${user.isCustomised()}">
+        <form method="get" th:action="@{/games}">
+            <div class="col-sm-8">
+                <button type="submit" class="btn btn-primary">Start</button>
+            </div>
+        </form>
+    </div>
+    <div th:if="${!user.isCustomised()}">
+        <div th:if="${user.getRace() == null}">
+            Race:
+            <p></p>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="race : ${T(rpg.entity.Race).values()}">
+                    <td>
+                        <small th:text="${race.name()}"></small>
+                    </td>
+                    <td>
+                        <form th:action="@{/race/{race}(race = ${race})}" method="get">
+                            <button type="submit" class="btn btn-primary">SELECT</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${user.getSpecialisation() == null}">
+            
+            Specialisation:
+            <p></p>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="spec : ${T(rpg.entity.Specialisation).values()}">
+                    <td>
+                        <small th:text="${spec.name()}"></small>
+                    </td>
+                    <td>
+                        <form th:action="@{/specialisation/{specialisation}(specialisation = ${spec})}" method="get">
+                            <button type="submit" class="btn btn-primary">SELECT</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="~{common :: js-lb}"></div>
+</html>
